@@ -108,37 +108,47 @@
     let urlAppsScript = "https://script.google.com/macros/s/AKfycbx31OYtlFJmta8L90W4iiWrDakZd13ZMUKKTNzWgjGwOX7DJ5ICctZEcByMrOKLD4vc9g/exec";
     //===================================================================================================
     function saveData() {
-        var urlInput = document.getElementById("urlInput");
-        if (!urlInput) {
-            alert("Không tìm thấy ô nhập URL!");
-            return;
-        }
-
-        var url = urlInput.value.trim();
-        if (!url) {
-            alert("Vui lòng nhập URL!");
-            return;
-        }
-
-        var selectedGift = document.querySelector('input[name="giftOption"]:checked');
-        if (!selectedGift) {
-            alert("Vui lòng chọn một loại Gift!");
-            return;
-        }
-        var giftOption = selectedGift.value;
-
-        let requestUrl = `${urlAppsScript}?GiftType=${giftOption}&LinkUrl=${url}`;
+      var saveButton = document.querySelector(".btn-primary");
+      saveButton.disabled = true;
 
 
-        fetch(requestUrl)
-        .then(response => response.text())
-        .then(message => {
-            alert(message);
-            document.getElementById("generatedLink").value = requestUrl;
-        })
-        .catch(error => {
-            alert(`🚨 Lỗi kết nối: ${error.message}`);
-        });
+      var urlInput = document.getElementById("urlInput");
+      if (!urlInput) {
+          alert("Không tìm thấy ô nhập URL!");
+          saveButton.disabled = false;
+          return;
+      }
+
+      var url = urlInput.value.trim();
+      if (!url) {
+          alert("Vui lòng nhập URL!");
+          saveButton.disabled = false;
+          return;
+      }
+
+      var selectedGift = document.querySelector('input[name="giftOption"]:checked');
+      if (!selectedGift) {
+          alert("Vui lòng chọn một loại Gift!");
+          saveButton.disabled = false;
+          return;
+      }
+      var giftOption = selectedGift.value;
+
+      let requestUrl = `${urlAppsScript}?GiftType=${giftOption}&LinkUrl=${url}`;
+
+
+      fetch(requestUrl)
+      .then(response => response.text())
+      .then(message => {
+          alert(message);
+          document.getElementById("generatedLink").value = requestUrl;
+      })
+      .catch(error => {
+          alert(`🚨 Lỗi kết nối: ${error.message}`);
+      })
+      .finally(() => {
+        saveButton.disabled = false;
+    });
 
     }
 
